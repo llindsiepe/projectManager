@@ -1,4 +1,4 @@
-# Sistema-de-Pedidos
+# Sistema-de-Gestão-de-Projetos
 Back-end de um sistema de pedidos, com NodeJS e PostgresSQL.
 
 <h1>PARA RODAR A APLICAÇÃO.</h1>
@@ -6,6 +6,10 @@ Back-end de um sistema de pedidos, com NodeJS e PostgresSQL.
 Execute o comando no terminal.
 ```shell
 "yarn" ou "npm install" 
+```
+Execute o comando no terminal, após realizar a configuração do banco de dados no arquivo src/config/database.js.
+```shell
+"yarn sequelize db:migrate"
 ```
 após isso execute o comandono terminal
 ```shell
