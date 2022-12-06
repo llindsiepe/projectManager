@@ -48,7 +48,7 @@ class ProjectController {
     });
 
     const searchAdress = await cep(adressFunction.zip_code);
-    adressFunction.zip_code = {
+    adressFunction.location = {
       city: searchAdress.city,
       state: searchAdress.state,
     };
@@ -56,9 +56,54 @@ class ProjectController {
     return res.json(adressFunction);
   }
 
-  async update(req, res) {}
+  async update(req, res) {
+    let schema = yup.object().shape({
+      title: yup.string(),
+      zip_code: yup.number(),
+      cost: yup.number(),
+      deadline: yup.date(),
+    });
+    try {
+      await schema.validate(req.body);
+    } catch (err) {
+      return res.status(422).json({ error: `Validation fails` });
+    }
 
-  async delete(req, res) {}
+    const project = await Project.findByPk(req.params.id);
+    if (project.username !== req.headers.username) {
+      return res.status(401).json({ error: "you don't have a permission" });
+    }
+
+    const projectUpdate = await project.update(req.body);
+
+    return res.json(projectUpdate);
+  }
+
+  async patch(req, res) {
+    const project = await Project.findByPk(req.params.id);
+    console.log(project.username);
+    console.log(req.headers.username);
+    if (project.username != req.headers.username) {
+      return res.status(401).json({ error: "you don't have a permission" });
+    }
+
+    project.done = true;
+
+    await project.save();
+
+    return res.json(project);
+  }
+
+  async delete(req, res) {
+    const project = await Project.findByPk(req.params.id);
+    if (project.username !== req.headers.username) {
+      return res.status(401).json({ error: "you don't have a permission" });
+    }
+
+    await project.destroy();
+
+    return res.json({ ok: 'Projeto excluído com sucesso' });
+  }
 }
 
 export default new ProjectController();
